@@ -1,3 +1,5 @@
+/* eslint-disable no-param-reassign */
+/* eslint-disable prettier/prettier */
 import { User } from "../../model/User";
 import { IUsersRepository, ICreateUserDTO } from "../IUsersRepository";
 
@@ -19,24 +21,50 @@ class UsersRepository implements IUsersRepository {
   }
 
   create({ name, email }: ICreateUserDTO): User {
-    // Complete aqui
-  }
+    const newUser = new User();
 
-  findById(id: string): User | undefined {
-    // Complete aqui
-  }
+    
+    Object.assign(newUser,
+    {
+      name,
+      email,
+      created_at: new Date(),
+      updated_at: new Date()
+    } 
+  )
+   this.users.push(newUser)
 
-  findByEmail(email: string): User | undefined {
-    // Complete aqui
-  }
+   return newUser;
+}
 
-  turnAdmin(receivedUser: User): User {
-    // Complete aqui
-  }
+findById(id: string): User | undefined {
+    const idExists = this.users.find(verify=>verify.id === id)
+    
+    return idExists;
+}
 
-  list(): User[] {
-    // Complete aqui
-  }
+findByEmail(email: string): User | undefined {
+   const emailExists = this.users.find(verify=>verify.email === email)
+    
+    return emailExists;
+}
+
+turnAdmin(receivedUser: User): User {
+  
+  if(receivedUser.admin){
+      return receivedUser;
+    }
+    // eslint-disable-next-line no-param-reassign
+    receivedUser.admin = true;
+    receivedUser.updated_at = new Date();
+
+    return receivedUser;
+}
+
+list(): User[] {
+ 
+  return this.users 
+}
 }
 
 export { UsersRepository };
